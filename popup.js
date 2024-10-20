@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function fetchExtensions() {
     chrome.management.getAll((extensions) => {
+      extensions.sort((a, b) => {
+        if (a.enabled === b.enabled) {
+          return a.name.localeCompare(b.name);
+        }
+        return a.enabled ? -1 : 1;
+      });
       displayExtensions(extensions);
     });
   }
@@ -39,6 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
       settingsButton.addEventListener('click', () => {
         openExtensionSettings(extension.id);
       });
+
+      const enabledIndicator = document.createElement('span');
+      enabledIndicator.textContent = extension.enabled ? 'Enabled' : 'Disabled';
+      listItem.appendChild(enabledIndicator);
 
       listItem.appendChild(enableButton);
       listItem.appendChild(disableButton);
@@ -101,6 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (event.key === 'Enter') {
       searchInput.blur();
       vimMode = true;
+      currentIndex = 0;
+      const items = extensionList.getElementsByTagName('li');
+      if (items.length > 0) {
+        items[0].classList.add('active');
+        items[0].scrollIntoView({ block: 'nearest' });
+      }
     }
   });
 

@@ -46,3 +46,15 @@ button:disabled {
 #extension-list li.active {
   background-color: #e0e0e0;
 }
+
+#extension-list li span {
+  margin-right: 10px;
+}
+
+#extension-list li span.enabled {
+  color: green;
+}
+
+#extension-list li span.disabled {
+  color: red;
+}
