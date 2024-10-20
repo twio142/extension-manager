@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const extensionList = document.getElementById('extension-list');
   let currentIndex = 0;
   let vimMode = true;
+  let allExtensions = [];
 
   function fetchExtensions() {
     chrome.management.getAll((extensions) => {
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return a.enabled ? -1 : 1;
       });
+      allExtensions = extensions;
       displayExtensions(extensions);
     });
   }
@@ -47,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const enabledIndicator = document.createElement('span');
-      enabledIndicator.textContent = extension.enabled ? 'Enabled' : 'Disabled';
+      enabledIndicator.classList.add(extension.enabled ? 'enabled' : 'disabled');
       listItem.appendChild(enabledIndicator);
 
       listItem.appendChild(enableButton);
@@ -97,10 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   searchInput.addEventListener('input', () => {
     const query = searchInput.value;
-    chrome.management.getAll((extensions) => {
-      const filteredExtensions = fuzzySearch(query, extensions);
-      displayExtensions(filteredExtensions);
-    });
+    const filteredExtensions = fuzzySearch(query, allExtensions);
+    displayExtensions(filteredExtensions);
   });
 
   searchInput.addEventListener('keydown', (event) => {
