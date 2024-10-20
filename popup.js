@@ -3,22 +3,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const extensionList = document.getElementById('extension-list');
   let currentIndex = 0;
   let vimMode = true;
+  let searchQuery = '';
   let allExtensions = [];
 
   function fetchExtensions() {
     chrome.management.getAll((extensions) => {
-      extensions.sort((a, b) => {
+      allExtensions = extensions;
+      displayExtensions();
+    });
+  }
+
+  function displayExtensions() {
+    let extensions = allExtensions
+      .filter(fuzzyMatch)
+      .sort((a, b) => {
         if (a.enabled === b.enabled) {
           return a.name.localeCompare(b.name);
         }
         return a.enabled ? -1 : 1;
       });
-      allExtensions = extensions;
-      displayExtensions(extensions);
-    });
-  }
-
-  function displayExtensions(extensions) {
     extensionList.innerHTML = '';
     extensions.forEach((extension, index) => {
       const listItem = document.createElement('li');
@@ -91,22 +94,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function fuzzySearch(query, extensions) {
-    return extensions.filter((extension) => {
-      return extension.name.toLowerCase().includes(query.toLowerCase());
-    });
+  function fuzzyMatch(extension) {
+    return searchQuery.trim() == '' || extension.name.toLowerCase().includes(searchQuery.toLowerCase());
   }
 
   searchInput.addEventListener('input', () => {
-    const query = searchInput.value;
-    const filteredExtensions = fuzzySearch(query, allExtensions);
-    displayExtensions(filteredExtensions);
+    searchQuery = searchInput.value;
+    displayExtensions();
   });
 
   searchInput.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
+      event.preventDefault();
       searchInput.value = '';
       searchInput.blur();
+      searchQuery = '';
+      displayExtensions();
       vimMode = true;
     } else if (event.key === 'Enter') {
       searchInput.blur();
@@ -114,8 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
       currentIndex = 0;
       const items = extensionList.getElementsByTagName('li');
       if (items.length > 0) {
-        items[0].classList.add('active');
-        items[0].scrollIntoView({ block: 'nearest' });
+        let activeItem = items.find((item) => item.classList.contains('active'));
+        if (!activeItem) {
+          items[0].classList.add('active');
+          activeItem = items[0];
+        }
+        activeItem.scrollIntoView({ block: 'nearest' });
       }
     }
   });
