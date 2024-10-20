@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('search');
   const extensionList = document.getElementById('extension-list');
-  let currentIndex = -1;
+  let currentIndex = 0;
   let vimMode = true;
 
   function fetchExtensions() {
@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (index === currentIndex) {
         listItem.classList.add('active');
+        listItem.scrollIntoView({ block: 'nearest' });
       }
     });
   }
@@ -121,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
           items[currentIndex].querySelector('button').click();
         }
       } else if (event.key === '/') {
+        event.preventDefault();
         searchInput.focus();
         vimMode = false;
       }
@@ -133,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (currentIndex >= 0 && currentIndex < items.length) {
       items[currentIndex].classList.add('active');
+      items[currentIndex].scrollIntoView({ block: 'nearest' });
     }
   }
 
