@@ -1,1 +1,3 @@
-This repository is empty. Any task executed on it should be considered a new capability and needs to be created.
+## Extension Manager
+
+A Chrome extension that manages all installed extensions in a popup window.
