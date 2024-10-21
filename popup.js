@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let vimMode = true;
   let searchQuery = '';
   let allExtensions = [];
+  let selectedIds = [];
+  const marginTop = 36;
 
   function fetchExtensions() {
     chrome.management.getAll((extensions) => {
@@ -15,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function displayExtensions() {
     let extensions = allExtensions
-      .filter(fuzzyMatch)
       .sort((a, b) => {
         if (a.enabled === b.enabled) {
           return a.name.localeCompare(b.name);
@@ -23,22 +24,32 @@ document.addEventListener('DOMContentLoaded', () => {
         return a.enabled ? -1 : 1;
       });
     extensionList.innerHTML = '';
-    extensions.forEach((extension, index) => {
+    extensions.forEach((extension) => {
       const listItem = document.createElement('li');
-      listItem.textContent = extension.name;
+      listItem.setAttribute('data-id', extension.id);
+      if (selectedIds.includes(extension.id)) {
+        listItem.classList.add('selected');
+      }
+      const icon = document.createElement('img');
+      icon.src = extension.icons ? extension.icons[0].url : 'icons/default.svg';
+      icon.classList.add('extension-icon');
+      listItem.appendChild(icon);
 
-      const enableButton = document.createElement('button');
-      enableButton.innerHTML = '<img src="icons/enable.svg" class="enable"/>';
-      enableButton.title = 'Enable';
-      enableButton.addEventListener('click', () => {
-        enableExtension(extension.id);
-      });
+      const span = document.createElement('span');
+      span.textContent = extension.name;
+      span.title = extension.name;
+      span.classList.add('extension-name');
 
-      const disableButton = document.createElement('button');
-      disableButton.innerHTML = '<img src="icons/disable.svg" class="disable"/>';
-      disableButton.title = 'Disable';
-      disableButton.addEventListener('click', () => {
-        disableExtension(extension.id);
+      const state = extension.enabled ? 'enabled' : 'disabled';
+      listItem.classList.add(state);
+
+      const buttonContainer = document.createElement('div');
+      buttonContainer.classList.add('buttons');
+      const toggleButton = document.createElement('button');
+      toggleButton.innerHTML = `<img src="icons/toggle.svg" class=${state}/>`;
+      toggleButton.title = state === 'enabled' ? 'Disable' : 'Enable';
+      toggleButton.addEventListener('click', () => {
+        toggleExtension(extension.id);
       });
 
       const uninstallButton = document.createElement('button');
@@ -49,25 +60,33 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const settingsButton = document.createElement('button');
-      settingsButton.innerHTML = '<img src="icons/settings.svg" class="icon-settings"/>';
+      settingsButton.innerHTML = '<img src="icons/settings.svg" class="settings"/>';
       settingsButton.title = 'Settings';
       settingsButton.addEventListener('click', () => {
         openExtensionSettings(extension.id);
       });
 
-      const enabledIndicator = document.createElement('span');
-      enabledIndicator.classList.add(extension.enabled ? 'enabled' : 'disabled');
-      listItem.appendChild(enabledIndicator);
+      listItem.appendChild(span);
+      listItem.appendChild(buttonContainer);
 
-      listItem.appendChild(enableButton);
-      listItem.appendChild(disableButton);
-      listItem.appendChild(uninstallButton);
-      listItem.appendChild(settingsButton);
+      buttonContainer.appendChild(toggleButton);
+      buttonContainer.appendChild(uninstallButton);
+      buttonContainer.appendChild(settingsButton);
       extensionList.appendChild(listItem);
 
-      if (index === currentIndex) {
-        listItem.classList.add('active');
-        listItem.scrollIntoView({ block: 'nearest' });
+      if (!fuzzyMatch(extension)) {
+        listItem.classList.add('hidden');
+      }
+    });
+    updateActiveItem(extensionList.getElementsByTagName('li'));
+  }
+
+  function toggleExtension(extensionId) {
+    chrome.management.get(extensionId, (extensionInfo) => {
+      if (extensionInfo.enabled) {
+        disableExtension(extensionId);
+      } else {
+        enableExtension(extensionId);
       }
     });
   }
@@ -84,10 +103,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function reloadExtension(extensionId) {
+    chrome.management.setEnabled(extensionId, false, () => {
+      chrome.management.setEnabled(extensionId, true, () => {
+        fetchExtensions();
+      });
+    });
+  }
+
   function uninstallExtension(extensionId) {
     chrome.management.uninstall(extensionId, () => {
       fetchExtensions();
     });
+  }
+
+  function openExtension(extensionId) {
+    chrome.tabs.create({ url: `chrome://extensions/?id=${extensionId}` });
   }
 
   function openExtensionSettings(extensionId) {
@@ -117,41 +148,92 @@ document.addEventListener('DOMContentLoaded', () => {
       vimMode = true;
     } else if (event.key === 'Enter') {
       searchInput.blur();
-      vimMode = true;
-      currentIndex = 0;
       const items = extensionList.getElementsByTagName('li');
-      if (items.length > 0) {
-        let activeItem = items.find((item) => item.classList.contains('active'));
-        if (!activeItem) {
-          items[0].classList.add('active');
-          activeItem = items[0];
+      const firstItem = extensionList.querySelector('li:not(.hidden)');
+      if (firstItem) {
+        if (extensionList.querySelector('.active').matches('.hidden')) {
+          currentIndex = Array.from(items).indexOf(firstItem);
         }
-        activeItem.scrollIntoView({ block: 'nearest' });
+
+        updateActiveItem(items);
       }
+      event.stopPropagation();
+      vimMode = true;
     }
   });
 
   document.addEventListener('keydown', (event) => {
     if (vimMode) {
       const items = extensionList.getElementsByTagName('li');
-      if (event.key === 'j') {
-        if (currentIndex < items.length - 1) {
+      const activeItem = extensionList.querySelector('.active');
+      if (event.code === 'KeyJ') {
+        if (event.altKey && activeItem) {
+          // Toggle selection and move to next item
+          activeItem.classList.toggle('selected');
+          if (activeItem.classList.contains('selected')) {
+            selectedIds.push(activeItem.getAttribute('data-id'));
+          } else {
+            selectedIds = selectedIds.filter((id) => id !== activeItem.getAttribute('data-id'));
+          }
+        }
+        currentIndex++;
+        if (currentIndex >= items.length) {
+          currentIndex = 0;
+        }
+        while (items[currentIndex].matches('.hidden')) {
           currentIndex++;
-          updateActiveItem(items);
+          if (currentIndex >= items.length) {
+            currentIndex = 0;
+          }
         }
-      } else if (event.key === 'k') {
-        if (currentIndex > 0) {
+        updateActiveItem(items);
+      } else if (event.code === 'KeyK') {
+        if (event.altKey && activeItem) {
+          // Toggle selection
+          activeItem.classList.toggle('selected');
+          if (activeItem.classList.contains('selected')) {
+            selectedIds.push(activeItem.getAttribute('data-id'));
+          } else {
+            selectedIds = selectedIds.filter((id) => id !== activeItem.getAttribute('data-id'));
+          }
+        } else {
           currentIndex--;
+          if (currentIndex < 0) {
+            currentIndex = items.length - 1;
+          }
+          while (items[currentIndex].matches('.hidden')) {
+            currentIndex--;
+            if (currentIndex < 0) {
+              currentIndex = items.length - 1;
+            }
+          }
           updateActiveItem(items);
         }
-      } else if (event.key === 'Enter') {
-        if (currentIndex >= 0 && currentIndex < items.length) {
-          items[currentIndex].querySelector('button').click();
+      } else if (event.code === 'KeyH' && event.altKey) {
+        const lastSelected = [...extensionList.querySelectorAll('.selected')].at(-1);
+        if (lastSelected) {
+          lastSelected.classList.remove('selected');
+          selectedIds = selectedIds.filter((id) => id !== lastSelected.getAttribute('data-id'));
         }
       } else if (event.key === '/') {
         event.preventDefault();
         searchInput.focus();
         vimMode = false;
+      } else if (['Enter', 'o'].includes(event.key) && !event.altKey && activeItem) {
+        openExtensionSettings(activeItem.getAttribute('data-id'));
+      } else if (event.code == 'KeyS' && event.ctrlKey && activeItem) {
+        openExtension(activeItem.getAttribute('data-id'));
+      } else if (event.code == 'KeyX' && event.ctrlKey && activeItem) {
+        uninstallExtension(activeItem.getAttribute('data-id'));
+      } else if (event.ctrlKey && ['KeyO', 'KeyF', 'KeyR'].includes(event.code)) {
+        let extensions = [...extensionList.querySelectorAll('.selected')];
+        if (extensions.length == 0) {
+          extensions = [activeItem];
+        }
+        let func = event.code == 'KeyO' ? openExtension : event.code == 'KeyF' ? enableExtension : reloadExtension;
+        for (let i = 0; i < extensions.length; i++) {
+          func(extensions[i].getAttribute('data-id'));
+        }
       }
     }
   });
@@ -163,6 +245,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentIndex >= 0 && currentIndex < items.length) {
       items[currentIndex].classList.add('active');
       items[currentIndex].scrollIntoView({ block: 'nearest' });
+      const top = items[currentIndex].getBoundingClientRect().top;
+      const offset = top < marginTop ? top - marginTop : 0;
+      window.scrollBy(0, offset);
     }
   }
 
