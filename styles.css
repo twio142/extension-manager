@@ -58,3 +58,21 @@ button:disabled {
 #extension-list li span.disabled {
   color: red;
 }
+
+.search-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#extension-list li button {
+  display: none;
+}
+
+#extension-list li:hover button,
+#extension-list li.active button {
+  display: inline-block;
+}

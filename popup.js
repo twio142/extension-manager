@@ -28,25 +28,29 @@ document.addEventListener('DOMContentLoaded', () => {
       listItem.textContent = extension.name;
 
       const enableButton = document.createElement('button');
-      enableButton.textContent = 'Enable';
+      enableButton.innerHTML = '<img src="icons/enable.svg" class="enable"/>';
+      enableButton.title = 'Enable';
       enableButton.addEventListener('click', () => {
         enableExtension(extension.id);
       });
 
       const disableButton = document.createElement('button');
-      disableButton.textContent = 'Disable';
+      disableButton.innerHTML = '<img src="icons/disable.svg" class="disable"/>';
+      disableButton.title = 'Disable';
       disableButton.addEventListener('click', () => {
         disableExtension(extension.id);
       });
 
       const uninstallButton = document.createElement('button');
-      uninstallButton.textContent = 'Uninstall';
+      uninstallButton.innerHTML = '<img src="icons/uninstall.svg" class="uninstall"/>';
+      uninstallButton.title = 'Uninstall';
       uninstallButton.addEventListener('click', () => {
         uninstallExtension(extension.id);
       });
 
       const settingsButton = document.createElement('button');
-      settingsButton.textContent = 'Settings';
+      settingsButton.innerHTML = '<img src="icons/settings.svg" class="icon-settings"/>';
+      settingsButton.title = 'Settings';
       settingsButton.addEventListener('click', () => {
         openExtensionSettings(extension.id);
       });
