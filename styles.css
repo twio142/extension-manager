@@ -32,7 +32,7 @@ body {
   align-items: center;
   padding: 5px 9px 5px 5px;
   border-bottom: 1px dotted var(--border);
-  border-left: 4px solid transparent;
+  border-left: 3px solid transparent;
   height: 18px;
   position: relative;
 }
@@ -52,7 +52,7 @@ body {
 .extension-icon {
   width: 16px;
   height: 16px;
-  margin-right: 6px;
+  margin-right: 8px;
 }
 
 .disabled .extension-icon {
@@ -101,6 +101,14 @@ body {
   right: 2px;
 }
 
+.check {
+  padding: 1px 5px;
+}
+
+.d-none {
+  display: none;
+}
+
 button {
   border: none;
   background-color: white;
@@ -116,7 +124,7 @@ button {
   background-color: var(--bg-active);
 }
 
-button img {
+button img, img.check {
   width: 18px;
   height: 18px;
   margin-top: 2px;
@@ -129,9 +137,9 @@ button:hover img {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --fg: #eeeeee;
+    --fg: #d0d0d0;
     --bg: #202124;
-    --bg-active: #302F52;
+    --bg-active: #161719;
     --fg-dim: #777777;
     --fg-light: #555555;
     --border: #555555;

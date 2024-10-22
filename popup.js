@@ -45,6 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const buttonContainer = document.createElement('div');
       buttonContainer.classList.add('buttons');
+
+      const check = document.createElement('span');
+      check.innerHTML = '<img src="icons/check.svg" class="check d-none"/>';
+
       const toggleButton = document.createElement('button');
       toggleButton.innerHTML = `<img src="icons/toggle.svg" class=${state}/>`;
       toggleButton.title = state === 'enabled' ? 'Disable' : 'Enable';
@@ -69,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
       listItem.appendChild(span);
       listItem.appendChild(buttonContainer);
 
+      buttonContainer.appendChild(check);
       buttonContainer.appendChild(toggleButton);
       buttonContainer.appendChild(uninstallButton);
       buttonContainer.appendChild(settingsButton);
@@ -209,6 +214,30 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           updateActiveItem(items);
         }
+      } else if (event.code == "Tab" && activeItem) {
+        if (event.shiftKey) {
+          activeItem.classList.remove('selected');
+          selectedIds = selectedIds.filter((id) => id !== activeItem.getAttribute('data-id'));
+        } else {
+          event.preventDefault();
+          activeItem.classList.toggle('selected');
+          if (activeItem.classList.contains('selected')) {
+            selectedIds.push(activeItem.getAttribute('data-id'));
+          } else {
+            selectedIds = selectedIds.filter((id) => id !== activeItem.getAttribute('data-id'));
+          }
+          currentIndex++;
+          if (currentIndex >= items.length) {
+            currentIndex = 0;
+          }
+          while (items[currentIndex].matches('.hidden')) {
+            currentIndex++;
+            if (currentIndex >= items.length) {
+              currentIndex = 0;
+            }
+          }
+          updateActiveItem(items);
+        }
       } else if (event.code === 'KeyH' && event.altKey) {
         const lastSelected = [...extensionList.querySelectorAll('.selected')].at(-1);
         if (lastSelected) {
@@ -219,21 +248,27 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         searchInput.focus();
         vimMode = false;
-      } else if (['Enter', 'o'].includes(event.key) && !event.altKey && activeItem) {
+      } else if (['Enter', 'o'].includes(event.key) && !event.altKey && !event.ctrlKey && activeItem) {
         openExtensionSettings(activeItem.getAttribute('data-id'));
       } else if (event.code == 'KeyS' && event.ctrlKey && activeItem) {
         openExtension(activeItem.getAttribute('data-id'));
       } else if (event.code == 'KeyX' && event.ctrlKey && activeItem) {
         uninstallExtension(activeItem.getAttribute('data-id'));
-      } else if (event.ctrlKey && ['KeyO', 'KeyF', 'KeyR'].includes(event.code)) {
+      } else if (event.ctrlKey && ['KeyE', 'KeyD', 'KeyR'].includes(event.code)) {
         let extensions = [...extensionList.querySelectorAll('.selected')];
         if (extensions.length == 0) {
           extensions = [activeItem];
         }
-        let func = event.code == 'KeyO' ? openExtension : event.code == 'KeyF' ? enableExtension : reloadExtension;
+        let func = event.code == 'KeyE' ? enableExtension : event.code == 'KeyD' ? disableExtension : reloadExtension;
         for (let i = 0; i < extensions.length; i++) {
           func(extensions[i].getAttribute('data-id'));
         }
+      } else if (event.code == 'KeyY' && event.ctrlKey) {
+        navigator.clipboard.writeText(activeItem.getAttribute('data-id'));
+        activeItem.querySelector('.check').classList.remove('d-none');
+        setTimeout(() => {
+          activeItem.querySelector('.check').classList.add('d-none');
+        }, 1000);
       }
     }
   });
