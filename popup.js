@@ -187,6 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       if (event.altKey && activeItem) {
         // Toggle selection and move to next item
+        event.preventDefault();
         activeItem.classList.toggle("selected");
         if (activeItem.classList.contains("selected")) {
           selectedIds.push(activeItem.getAttribute("data-id"));
@@ -213,6 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       if (event.altKey && activeItem) {
         // Toggle selection
+        event.preventDefault();
         activeItem.classList.toggle("selected");
         if (activeItem.classList.contains("selected")) {
           selectedIds.push(activeItem.getAttribute("data-id"));
@@ -235,13 +237,13 @@ document.addEventListener("DOMContentLoaded", () => {
         updateActiveItem(items);
       }
     } else if (event.code == "Tab" && activeItem) {
+      event.preventDefault();
       if (event.shiftKey) {
         activeItem.classList.remove("selected");
         selectedIds = selectedIds.filter(
           (id) => id !== activeItem.getAttribute("data-id"),
         );
       } else {
-        event.preventDefault();
         activeItem.classList.toggle("selected");
         if (activeItem.classList.contains("selected")) {
           selectedIds.push(activeItem.getAttribute("data-id"));
@@ -263,6 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateActiveItem(items);
       }
     } else if (event.code === "KeyH" && event.altKey) {
+      event.preventDefault();
       const lastSelected = [...extensionList.querySelectorAll(".selected")].at(
         -1,
       );
@@ -281,12 +284,16 @@ document.addEventListener("DOMContentLoaded", () => {
       ((event.code === "KeyO" && (vimMode || event.ctrlKey)) ||
         event.key == "Enter")
     ) {
+      event.preventDefault();
       openExtensionOptions(activeItem.getAttribute("data-id"));
     } else if (event.code == "KeyS" && event.ctrlKey && activeItem) {
+      event.preventDefault();
       openExtensionSettings(activeItem.getAttribute("data-id"));
     } else if (event.code == "KeyX" && event.ctrlKey && activeItem) {
+      event.preventDefault();
       uninstallExtension(activeItem.getAttribute("data-id"));
     } else if (event.ctrlKey && ["KeyE", "KeyD", "KeyR"].includes(event.code)) {
+      event.preventDefault();
       let extensions = [...extensionList.querySelectorAll(".selected")];
       if (extensions.length == 0) {
         extensions = [activeItem];
@@ -301,6 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
         func(extensions[i].getAttribute("data-id"));
       }
     } else if (event.code == "KeyY" && event.ctrlKey) {
+      event.preventDefault();
       navigator.clipboard.writeText(activeItem.getAttribute("data-id"));
       activeItem.querySelector(".check").classList.remove("d-none");
       setTimeout(() => {
