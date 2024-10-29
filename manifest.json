@@ -13,6 +13,10 @@
     "storage",
     "activeTab"
   ],
+  "options_ui": {
+    "page": "popup.html",
+    "open_in_tab": true
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
