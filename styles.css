@@ -101,10 +101,6 @@ body {
   right: 2px;
 }
 
-.check {
-  padding: 1px 5px;
-}
-
 .d-none {
   display: none;
 }
@@ -124,7 +120,7 @@ button {
   background-color: var(--bg-active);
 }
 
-button img, img.check {
+button img, .check img {
   width: 18px;
   height: 18px;
   margin-top: 2px;
@@ -133,6 +129,40 @@ button img, img.check {
 
 button:hover img {
   filter: invert(34%) sepia(46%) saturate(1000%) hue-rotate(201deg) brightness(85%) contrast(148%);
+}
+
+.check {
+  padding: 0.8px 0;
+}
+
+.reload {
+  margin-top: 3.6px;
+  margin-right: 6px;
+}
+
+.reload img {
+  width: 20px;
+  height: 20px;
+  animation: rotateArrow 0.9s forwards, fadeOut 0.5s 0.9s forwards;
+  filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg) brightness(96%) contrast(148%);
+}
+
+@keyframes rotateArrow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-220deg);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

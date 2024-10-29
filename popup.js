@@ -50,7 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
       buttonContainer.classList.add("buttons");
 
       const check = document.createElement("span");
-      check.innerHTML = '<img src="icons/check.svg" class="check d-none"/>';
+      check.classList.add("check");
+      check.innerHTML = '<img src="icons/check.svg" class="d-none"/>';
+      const reload = document.createElement("span");
+      reload.classList.add("reload");
+      reload.innerHTML = '<img src="icons/reload.svg" class="d-none"/>';
 
       const toggleButton = document.createElement("button");
       toggleButton.innerHTML = `<img src="icons/toggle.svg" class=${state}/>`;
@@ -79,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       listItem.appendChild(buttonContainer);
 
       buttonContainer.appendChild(check);
+      buttonContainer.appendChild(reload);
       buttonContainer.appendChild(toggleButton);
       buttonContainer.appendChild(uninstallButton);
       buttonContainer.appendChild(settingsButton);
@@ -114,11 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function reloadExtension(extensionId) {
-    chrome.management.setEnabled(extensionId, false, () => {
-      chrome.management.setEnabled(extensionId, true, () => {
-        fetchExtensions();
-      });
-    });
+    chrome.management.setEnabled(extensionId, false, () => 
+      chrome.management.setEnabled(extensionId, true)
+    );
   }
 
   function uninstallExtension(extensionId) {
@@ -305,14 +308,18 @@ document.addEventListener("DOMContentLoaded", () => {
             ? disableExtension
             : reloadExtension;
       for (let i = 0; i < extensions.length; i++) {
+        extensions[i].querySelector(".reload img").classList.remove("d-none");
+        setTimeout(() => {
+          extensions[i].querySelector(".reload img").classList.add("d-none");
+        }, 1500);
         func(extensions[i].getAttribute("data-id"));
       }
     } else if (event.code == "KeyY" && event.ctrlKey) {
       event.preventDefault();
       navigator.clipboard.writeText(activeItem.getAttribute("data-id"));
-      activeItem.querySelector(".check").classList.remove("d-none");
+      activeItem.querySelector(".check img").classList.remove("d-none");
       setTimeout(() => {
-        activeItem.querySelector(".check").classList.add("d-none");
+        activeItem.querySelector(".check img").classList.add("d-none");
       }, 800);
     }
   });
