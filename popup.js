@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function reloadExtension(extensionId) {
     chrome.management.setEnabled(extensionId, false, () =>
-      chrome.management.setEnabled(extensionId, true)
+      chrome.management.setEnabled(extensionId, true),
     );
   }
 
@@ -155,12 +155,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const items = extensionList.getElementsByTagName("li");
     const firstItem = extensionList.querySelector("li:not(.hidden)");
     if (firstItem) {
-      console.log(1, currentIndex);
-      if (extensionList.querySelector(".active").matches(".hidden")) {
+      if (extensionList.querySelector(".active.hidden")) {
         currentIndex = Array.from(items).indexOf(firstItem);
-        console.log(2, currentIndex);
-      } else {
-        console.log(3, extensionList.querySelector(".active"));
       }
       updateActiveItem(items);
     }
@@ -283,19 +279,23 @@ document.addEventListener("DOMContentLoaded", () => {
       searchInput.focus();
       vimMode = false;
     } else if (
-      activeItem?.matches(".has-options") &&
+      activeItem?.matches(".enabled.has-options") &&
       ((event.code === "KeyO" && (vimMode || event.ctrlKey)) ||
         event.key == "Enter")
     ) {
+      // Open options
       event.preventDefault();
       openExtensionOptions(activeItem.getAttribute("data-id"));
     } else if (event.code == "KeyS" && event.ctrlKey && activeItem) {
+      // Open settings
       event.preventDefault();
       openExtensionSettings(activeItem.getAttribute("data-id"));
     } else if (event.code == "KeyX" && event.ctrlKey && activeItem) {
+      // Uninstall
       event.preventDefault();
       uninstallExtension(activeItem.getAttribute("data-id"));
     } else if (event.ctrlKey && ["KeyE", "KeyD", "KeyR"].includes(event.code)) {
+      // Enable, Disable, Reload
       event.preventDefault();
       let extensions = [...extensionList.querySelectorAll(".selected")];
       if (extensions.length == 0) {
