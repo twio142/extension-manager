@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let allExtensions = [];
   let selectedIds = [];
   const marginTop = 36;
+  var externalUrl;
+  chrome.storage.local.get("externalUrl", (data) => {
+    externalUrl = data.externalUrl;
+  });
 
   function fetchExtensions() {
     chrome.management.getAll((extensions) => {
@@ -170,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
       searchQuery = "";
       displayExtensions();
       vimMode = true;
-    } else if (event.key === "Enter") {
+    } else if (event.key === "Enter" && !event.ctrlKey) {
       searchInput.blur();
       event.stopPropagation();
       vimMode = true;
@@ -264,6 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateActiveItem(items);
       }
     } else if (event.code === "KeyH" && event.altKey) {
+      // Unselect last selected
       event.preventDefault();
       const lastSelected = [...extensionList.querySelectorAll(".selected")].at(
         -1,
@@ -278,10 +283,17 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
       searchInput.focus();
       vimMode = false;
+    } else if (externalUrl && event.key === "Enter" && activeItem?.matches('.enabled')) {
+      // Activate using external URL
+      event.preventDefault();
+      event.stopPropagation();
+      location.assign(
+        externalUrl.replace("%s", encodeURIComponent(activeItem.textContent)),
+      );
     } else if (
       activeItem?.matches(".enabled.has-options") &&
-      ((event.code === "KeyO" && (vimMode || event.ctrlKey)) ||
-        event.key == "Enter")
+      event.code === "KeyO" &&
+      (vimMode || event.ctrlKey)
     ) {
       // Open options
       event.preventDefault();
@@ -315,6 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
         func(extensions[i].getAttribute("data-id"));
       }
     } else if (event.code == "KeyY" && event.ctrlKey) {
+      // Copy extension ID
       event.preventDefault();
       navigator.clipboard.writeText(activeItem.getAttribute("data-id"));
       activeItem.querySelector(".check img").classList.remove("d-none");

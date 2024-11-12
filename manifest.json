@@ -10,12 +10,11 @@
   },
   "permissions": [
     "management",
-    "storage",
-    "activeTab"
+    "storage"
   ],
   "options_ui": {
-    "page": "popup.html",
-    "open_in_tab": true
+    "page": "settings.html",
+    "open_in_tab": false
   },
   "action": {
     "default_popup": "popup.html",
