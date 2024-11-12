@@ -68,9 +68,10 @@ body {
 }
 
 #search {
-  width: 340px;
+  width: calc(100% - 4px);
   height: 35px;
   padding: 10px;
+  margin: 1px 2px;
   box-sizing: border-box;
   border: none;
   background-color: var(--bg);
