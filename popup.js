@@ -10,6 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
   var externalUrl;
   chrome.storage.local.get("externalUrl", (data) => {
     externalUrl = data.externalUrl;
+    if (externalUrl) {
+      extensionList
+        .querySelectorAll(".enabled a")
+        .forEach(
+          (a) =>
+            (a.href = externalUrl.replace("%s", encodeURIComponent(a.title))),
+        );
+    }
   });
 
   function fetchExtensions() {
@@ -38,10 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
       icon.classList.add("extension-icon");
       listItem.appendChild(icon);
 
-      const span = document.createElement("span");
-      span.textContent = extension.name;
-      span.title = extension.name;
-      span.classList.add("extension-name");
+      const a = document.createElement("a");
+      a.textContent = extension.name;
+      a.title = extension.name;
+      a.classList.add("extension-name");
+      if (extension.enabled && externalUrl) {
+        a.href = externalUrl.replace("%s", encodeURIComponent(extension.name));
+      }
 
       const state = extension.enabled ? "enabled" : "disabled";
       listItem.classList.add(state);
@@ -83,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         openExtensionSettings(extension.id);
       });
 
-      listItem.appendChild(span);
+      listItem.appendChild(a);
       listItem.appendChild(buttonContainer);
 
       buttonContainer.appendChild(check);
@@ -283,13 +294,11 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
       searchInput.focus();
       vimMode = false;
-    } else if (externalUrl && event.key === "Enter" && activeItem?.matches('.enabled')) {
+    } else if (event.key === "Enter") {
       // Activate using external URL
       event.preventDefault();
       event.stopPropagation();
-      location.assign(
-        externalUrl.replace("%s", encodeURIComponent(activeItem.textContent)),
-      );
+      activeItem.querySelector("a").click();
     } else if (
       activeItem?.matches(".enabled.has-options") &&
       event.code === "KeyO" &&

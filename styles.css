@@ -49,6 +49,11 @@ body {
   text-overflow: ellipsis;
 }
 
+li.enabled a {
+  color: var(--fg);
+  text-decoration: none;
+}
+
 .extension-icon {
   width: 16px;
   height: 16px;
