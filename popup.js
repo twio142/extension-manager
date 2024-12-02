@@ -2,9 +2,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const searchInput = document.getElementById("search");
   const extensionList = document.getElementById("extension-list");
   let currentIndex = 0;
-  // TODO: `vimMode` should be determined by the user setting of the initial editing mode
-  // if vimMode is false, auto-focus on the search input
-  let {vimMode} = await chrome.storage.local.get("initWithVim") || false;
+  const {initWithVim} = await chrome.storage.local.get("initWithVim");
+  let vimMode = !!initWithVim;
   if (!vimMode)
     searchInput.focus();
   let searchQuery = "";
@@ -171,7 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   searchInput.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
+    if (event.key === "Escape" && initWithVim) {
       event.preventDefault();
       searchInput.value = "";
       searchInput.blur();
