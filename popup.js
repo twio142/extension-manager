@@ -1,26 +1,17 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const searchInput = document.getElementById("search");
   const extensionList = document.getElementById("extension-list");
   let currentIndex = 0;
-  let vimMode = true;
   // TODO: `vimMode` should be determined by the user setting of the initial editing mode
   // if vimMode is false, auto-focus on the search input
+  let {vimMode} = await chrome.storage.local.get("initWithVim") || false;
+  if (!vimMode)
+    searchInput.focus();
   let searchQuery = "";
   let allExtensions = [];
   let selectedIds = [];
   const marginTop = 36;
-  var externalUrl;
-  chrome.storage.local.get("externalUrl", (data) => {
-    externalUrl = data.externalUrl;
-    if (externalUrl) {
-      extensionList
-        .querySelectorAll(".enabled a")
-        .forEach(
-          (a) =>
-            (a.href = externalUrl.replace("%s", encodeURIComponent(a.title))),
-        );
-    }
-  });
+  const {externalUrl} = await chrome.storage.local.get("externalUrl");
 
   function fetchExtensions() {
     chrome.management.getAll((extensions) => {
