@@ -18,3 +18,4 @@ button.addEventListener("click", () => {
 chrome.storage.local.get("externalUrl", (data) => {
   document.querySelector("#external-url").value = data.externalUrl || "";
 });
+// TODO: set `initVimMode` based on the checkboxes

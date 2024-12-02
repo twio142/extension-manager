@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const extensionList = document.getElementById("extension-list");
   let currentIndex = 0;
   let vimMode = true;
+  // TODO: `vimMode` should be determined by the user setting of the initial editing mode
+  // if vimMode is false, auto-focus on the search input
   let searchQuery = "";
   let allExtensions = [];
   let selectedIds = [];
