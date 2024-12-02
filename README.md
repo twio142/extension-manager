@@ -4,6 +4,7 @@ A Chrome extension that manages all installed extensions.
 
 ## Features
 
+- [ ] Allow user to set the initial editing mode: vim / emacs
 - [x] Hotkeys for each action
     - `Enter`: activate the extension (using an external URL of your choice)
     - `ctrl-e`: enable the extension

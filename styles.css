@@ -49,6 +49,11 @@ body {
   text-overflow: ellipsis;
 }
 
+li.enabled a {
+  color: var(--fg);
+  text-decoration: none;
+}
+
 .extension-icon {
   width: 16px;
   height: 16px;
@@ -168,14 +173,34 @@ button:hover img {
 
 section {
   padding: 5px 15px 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-section input {
-  width: calc(100% - 10px);
+section > *:not(:last-child) {
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border);
+}
+
+section .external-url-input {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+}
+
+section input[type="text"] {
+  width: inherit;
+  border-width: 0;
+}
+
+section input[type="radio"] {
+  vertical-align: middle;
+  margin-top: -4px;
 }
 
 section button {
-  padding: 3px 6px;
+  font-size: 1em;
+  padding: 6px;
   border-radius: 3px;
 }
 
