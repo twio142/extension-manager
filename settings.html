@@ -8,10 +8,19 @@
   </head>
   <body>
     <section class="settings">
-    <p><b>External URL to activate an extension:</b></p>
-    <input type="text" id="external-url">
-    <p><code>%s</code> is a placeholder for the extension's name.</p>
-    <button type="submit">Save</button>
+    <div>
+      <p><b>External URL to activate an extension:</b></p>
+      <div class="external-url-input">
+        <input type="text" id="external-url" placeholder="external-tool://activate?extension=%s">
+        <button type="submit">Save</button>
+      </div>
+      <p><code>%s</code> is a placeholder for the extension's name.</p>
+    </div>
+    <div>
+      <p><b>Initial Editing Mode:</b></p>
+      <input type="radio" id="emacs-mode" name="editing-mode"> Emacs
+      <input type="radio" id="vim-mode" name="editing-mode"> Vim
+    </div>
     </section>
     <script src="settings.js"></script>
   </body>

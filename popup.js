@@ -1,24 +1,16 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const searchInput = document.getElementById("search");
   const extensionList = document.getElementById("extension-list");
   let currentIndex = 0;
-  let vimMode = true;
+  const {initWithVim} = await chrome.storage.local.get("initWithVim");
+  let vimMode = !!initWithVim;
+  if (!vimMode)
+    searchInput.focus();
   let searchQuery = "";
   let allExtensions = [];
   let selectedIds = [];
   const marginTop = 36;
-  var externalUrl;
-  chrome.storage.local.get("externalUrl", (data) => {
-    externalUrl = data.externalUrl;
-    if (externalUrl) {
-      extensionList
-        .querySelectorAll(".enabled a")
-        .forEach(
-          (a) =>
-            (a.href = externalUrl.replace("%s", encodeURIComponent(a.title))),
-        );
-    }
-  });
+  const {externalUrl} = await chrome.storage.local.get("externalUrl");
 
   function fetchExtensions() {
     chrome.management.getAll((extensions) => {
@@ -178,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   searchInput.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
+    if (event.key === "Escape" && initWithVim) {
       event.preventDefault();
       searchInput.value = "";
       searchInput.blur();
