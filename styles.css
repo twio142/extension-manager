@@ -175,7 +175,7 @@ section {
   padding: 5px 15px 20px;
 }
 
-section input {
+section input#external-url {
   width: calc(100% - 10px);
 }
 
