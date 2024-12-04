@@ -168,20 +168,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  searchInput.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && initWithVim) {
-      event.preventDefault();
-      searchInput.value = "";
-      searchInput.blur();
-      searchQuery = "";
-      displayExtensions();
-      vimMode = true;
-    } else if (event.key === "Enter" && !event.ctrlKey) {
-      searchInput.blur();
-      event.stopPropagation();
-      vimMode = true;
-    }
-  });
+  if (initWithVim)
+    searchInput.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        searchInput.value = "";
+        searchInput.blur();
+        searchQuery = "";
+        displayExtensions();
+        vimMode = true;
+      } else if (event.key === "Enter" && !event.ctrlKey) {
+        searchInput.blur();
+        event.stopPropagation();
+        vimMode = true;
+      }
+    });
 
   document.addEventListener("keydown", (event) => {
     const items = extensionList.getElementsByTagName("li");
