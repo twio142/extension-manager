@@ -5,7 +5,7 @@
   --fg-dim: #999999;
   --fg-light: #cccccc;
   --border: #cccccc;
-  --highlight: #B2B0FF;
+  --highlight: #b2b0ff;
 }
 
 body {
@@ -126,15 +126,18 @@ button {
   background-color: var(--bg-active);
 }
 
-button img, .check img {
+button img,
+.check img {
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg) brightness(96%) contrast(148%);
+  filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg)
+    brightness(96%) contrast(148%);
 }
 
 button:hover img {
-  filter: invert(34%) sepia(46%) saturate(1000%) hue-rotate(201deg) brightness(85%) contrast(148%);
+  filter: invert(34%) sepia(46%) saturate(1000%) hue-rotate(201deg)
+    brightness(85%) contrast(148%);
 }
 
 .check {
@@ -149,8 +152,11 @@ button:hover img {
 .reload img {
   width: 20px;
   height: 20px;
-  animation: rotateArrow 0.9s forwards, fadeOut 0.5s 0.9s forwards;
-  filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg) brightness(96%) contrast(148%);
+  animation:
+    rotateArrow 0.9s forwards,
+    fadeOut 0.5s 0.9s forwards;
+  filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg)
+    brightness(96%) contrast(148%);
 }
 
 @keyframes rotateArrow {
@@ -212,12 +218,14 @@ section button {
     --fg-dim: #777777;
     --fg-light: #555555;
     --border: #555555;
-    --highlight: #6556E8;
+    --highlight: #6556e8;
   }
   button img {
-    filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg) brightness(60%) contrast(148%);
+    filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg)
+      brightness(60%) contrast(148%);
   }
   button:hover img {
-    filter: invert(34%) sepia(46%) saturate(1100%) hue-rotate(201deg) brightness(72%) contrast(218%);
+    filter: invert(34%) sepia(46%) saturate(1100%) hue-rotate(201deg)
+      brightness(72%) contrast(218%);
   }
 }
