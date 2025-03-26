@@ -10,6 +10,7 @@
   },
   "permissions": [
     "management",
+    "tabs",
     "storage"
   ],
   "options_ui": {

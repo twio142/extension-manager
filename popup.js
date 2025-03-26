@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       a.title = extension.name;
       a.classList.add('extension-name');
       if (extension.enabled && externalUrl) {
-        a.href = externalUrl.replace('%s', encodeURIComponent(extension.name));
+        a.onclick = () => chrome.tabs.create({ url: externalUrl.replace('%s', encodeURIComponent(extension.name)) });
       }
 
       const state = extension.enabled ? 'enabled' : 'disabled';
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Activate using external URL
       event.preventDefault();
       event.stopPropagation();
-      activeItem.querySelector('a').click();
+      activeItem.querySelector('a').onclick?.();
     } else if (
       activeItem?.matches('.enabled.has-options')
       && event.code === 'KeyO'
