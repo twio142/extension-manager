@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const items = extensionList.getElementsByTagName('li');
     const activeItem = extensionList.querySelector('.active');
     if (
-      ((vimMode || event.ctrlKey) && event.code === 'KeyJ')
+      ((vimMode || event.ctrlKey) && ['KeyJ', 'KeyN'].includes(event.code))
       || event.key === 'ArrowDown'
     ) {
       if (event.altKey && activeItem) {
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       updateActiveItem(items);
     } else if (
-      ((vimMode || event.ctrlKey) && event.code === 'KeyK')
+      ((vimMode || event.ctrlKey) && ['KeyK', 'KeyP'].includes(event.code))
       || event.key === 'ArrowUp'
     ) {
       if (event.altKey && activeItem) {

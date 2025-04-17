@@ -4,7 +4,6 @@ A Chrome extension that manages all installed extensions.
 
 ## Features
 
-- [ ] Allow user to set the initial editing mode: vim / emacs
 - [x] Hotkeys for each action
     - `Enter`: activate the extension (using an external URL of your choice)
     - `ctrl-e`: enable the extension
@@ -14,10 +13,13 @@ A Chrome extension that manages all installed extensions.
     - `ctrl-s`: open the extension in `chrome://extensions`
     - `ctrl-y`: copy the extension id
     - `tab`: select multiple extensions
+    - `ctrl-j` / `ctrl-n`: move down
+    - `ctrl-k` / `ctrl-p`: move up
 - [x] Select multiple extensions and perform actions on them with hotkeys
 - [x] Settings
     - External URL to activate an extension
 - [x] Dark theme
+- [x] Allow user to set the initial editing mode: vim / emacs
 
 ### External URL
 
