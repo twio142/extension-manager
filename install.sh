@@ -8,8 +8,14 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # --- Select and prepare the correct binary ---
 OS_NAME=$(uname -s)
 case "$OS_NAME" in
-  Darwin) SOURCE_BINARY="$DIR/native-host/app.mac" ;;
-  Linux)  SOURCE_BINARY="$DIR/native-host/app.linux" ;;
+  Darwin)
+    SOURCE_BINARY="$DIR/native-host/app.mac"
+    TARGET_DIR="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
+    ;;
+  Linux)
+    SOURCE_BINARY="$DIR/native-host/app.linux"
+    TARGET_DIR="$HOME/.config/google-chrome/NativeMessagingHosts"
+    ;;
   *)
     echo "Unsupported OS: $OS_NAME. This script only supports macOS and Linux." >&2
     exit 1
@@ -23,23 +29,17 @@ fi
 
 DEST_BINARY="$DIR/native-host/app"
 cp "$SOURCE_BINARY" "$DEST_BINARY"
+chmod +x "$DEST_BINARY"
 # --- End of selection ---
-
-HOST_NAME="com.twio142.extension_manager"
-
-# Determine the universal native messaging host directory for Chromium browsers
-if [ "$OS_NAME" == "Darwin" ]; then
-  TARGET_DIR="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
-elif [ "$OS_NAME" == "Linux" ]; then
-  TARGET_DIR="$HOME/.config/google-chrome/NativeMessagingHosts"
-fi
-
-# Ensure the target directory exists
-mkdir -p "$TARGET_DIR"
 
 # Prompt for the extension ID
 echo "Please go to your browser's extensions page (e.g., chrome://extensions) to find your extension's ID."
 read -p "Paste the extension ID here: " EXTENSION_ID
+
+# Ensure the target directory exists
+mkdir -p "$TARGET_DIR"
+
+HOST_NAME="com.twio142.extension_manager"
 
 # Path to the final manifest file
 MANIFEST_PATH="$TARGET_DIR/$HOST_NAME.json"
@@ -57,9 +57,6 @@ cat << EOF > "$MANIFEST_PATH"
 }
 EOF
 
-# Make the executable runnable
-chmod +x "$DEST_BINARY"
-
-echo ""
+echo
 echo "Success! The native messaging host has been installed."
 echo "Please restart your browser for the changes to take effect."
