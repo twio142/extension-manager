@@ -2,6 +2,20 @@
 
 A Chrome extension that manages all installed extensions.
 
+## Installation
+
+> [!NOTE]
+> The provided installation script supports macOS and Linux only.
+
+1. **Download** the [latest release](https://github.com/twio142/extension_manager/releases/latest) and unpack it.
+2. **Install extension:**
+   - Go to your browser's extensions page (e.g., `chrome://extensions`).
+   - Enable "Developer mode", click "Load unpacked", and select the unpacked directory.
+3. **Run installer:**
+   - In your terminal, `cd` into the unpacked directory.
+   - Run `./install.sh` and paste the Extension ID from the extensions page when prompted.
+4. **Restart** your browser.
+
 ## Features
 
 - [x] Hotkeys for each action
