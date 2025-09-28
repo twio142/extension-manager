@@ -11,7 +11,8 @@
   "permissions": [
     "management",
     "tabs",
-    "storage"
+    "storage",
+    "nativeMessaging"
   ],
   "options_ui": {
     "page": "settings.html",

@@ -45,7 +45,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       a.title = extension.name;
       a.classList.add('extension-name');
       if (extension.enabled && externalUrl) {
-        a.onclick = () => chrome.tabs.create({ url: externalUrl.replace('%s', encodeURIComponent(extension.name)) });
+        a.onclick = () => {
+          const url = externalUrl.replace('%s', encodeURIComponent(extension.name));
+          chrome.runtime.sendNativeMessage(
+            'com.twio142.extension_manager',
+            { url },
+            () => {
+              if (chrome.runtime.lastError)
+                console.error(chrome.runtime.lastError);
+            },
+          );
+        };
       }
 
       const state = extension.enabled ? 'enabled' : 'disabled';
