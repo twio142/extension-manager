@@ -1,28 +1,32 @@
-const button = document.querySelector("button");
-button.addEventListener("click", () => {
-  const url = document.querySelector("#external-url").value;
+/* global chrome */
+
+const button = document.querySelector('button');
+button.addEventListener('click', () => {
+  const url = document.querySelector('#external-url').value;
   try {
-    new URL(url);
-    if (!url.includes("%s")) throw new Error("Missing %s");
+    URL.canParse(url);
+    if (!url.includes('%s'))
+      throw new Error('Missing %s');
   } catch (e) {
-    alert(e.message || "Invalid URL");
+    // eslint-disable-next-line no-alert
+    alert(e.message || 'Invalid URL');
     return;
   }
   chrome.storage.local.set({ externalUrl: url }, () => {
-    button.textContent = "Saved!";
+    button.textContent = 'Saved!';
     setTimeout(() => {
-      button.textContent = "Save";
+      button.textContent = 'Save';
     }, 1000);
   });
 });
-chrome.storage.local.get("externalUrl", (data) => {
-  document.querySelector("#external-url").value = data.externalUrl || "";
+chrome.storage.local.get('externalUrl', (data) => {
+  document.querySelector('#external-url').value = data.externalUrl || '';
 });
 
-const vimRadio = document.querySelector("#vim-mode");
-const emacsRadio = document.querySelector("#emacs-mode");
+const vimRadio = document.querySelector('#vim-mode');
+const emacsRadio = document.querySelector('#emacs-mode');
 
-vimRadio.addEventListener("change", () => {
+vimRadio.addEventListener('change', () => {
   if (vimRadio.checked) {
     emacsRadio.checked = false;
     chrome.storage.local.set({ initWithVim: true });
@@ -31,7 +35,7 @@ vimRadio.addEventListener("change", () => {
   }
 });
 
-emacsRadio.addEventListener("change", () => {
+emacsRadio.addEventListener('change', () => {
   if (emacsRadio.checked) {
     vimRadio.checked = false;
     chrome.storage.local.set({ initWithVim: false });
@@ -40,7 +44,7 @@ emacsRadio.addEventListener("change", () => {
   }
 });
 
-chrome.storage.local.get("initWithVim", (data) => {
+chrome.storage.local.get('initWithVim', (data) => {
   if (data.initWithVim) {
     vimRadio.checked = true;
     emacsRadio.checked = false;
