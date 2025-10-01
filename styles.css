@@ -131,13 +131,11 @@ button img,
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg)
-    brightness(96%) contrast(148%);
+  filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg) brightness(96%) contrast(148%);
 }
 
 button:hover img {
-  filter: invert(34%) sepia(46%) saturate(1000%) hue-rotate(201deg)
-    brightness(85%) contrast(148%);
+  filter: invert(34%) sepia(46%) saturate(1000%) hue-rotate(201deg) brightness(85%) contrast(148%);
 }
 
 .check {
@@ -155,8 +153,7 @@ button:hover img {
   animation:
     rotateArrow 0.9s forwards,
     fadeOut 0.5s 0.9s forwards;
-  filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg)
-    brightness(96%) contrast(148%);
+  filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg) brightness(96%) contrast(148%);
 }
 
 @keyframes rotateArrow {
@@ -194,12 +191,12 @@ section .external-url-input {
   gap: 8px;
 }
 
-section input[type="text"] {
+section input[type='text'] {
   width: inherit;
   border-width: 0;
 }
 
-section input[type="radio"] {
+section input[type='radio'] {
   vertical-align: middle;
   margin-top: -4px;
 }
@@ -221,11 +218,9 @@ section button {
     --highlight: #6556e8;
   }
   button img {
-    filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg)
-      brightness(60%) contrast(148%);
+    filter: invert(34%) sepia(46%) saturate(44%) hue-rotate(201deg) brightness(60%) contrast(148%);
   }
   button:hover img {
-    filter: invert(34%) sepia(46%) saturate(1100%) hue-rotate(201deg)
-      brightness(72%) contrast(218%);
+    filter: invert(34%) sepia(46%) saturate(1100%) hue-rotate(201deg) brightness(72%) contrast(218%);
   }
 }
