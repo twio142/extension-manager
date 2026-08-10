@@ -96,19 +96,30 @@ li.enabled a {
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
-#extension-list li .buttons {
+#extension-list li .row-actions {
   position: absolute;
-  display: none;
-}
-
-#extension-list li:hover .buttons,
-#extension-list li.active .buttons {
-  display: flex;
   right: 2px;
+  display: flex;
+  align-items: center;
 }
 
-.d-none {
-  display: none;
+/* The button group is a single shared element moved between rows, so the
+   transient indicators are ordered explicitly rather than by insertion. */
+#extension-list li .buttons {
+  display: flex;
+  order: 3;
+}
+
+#extension-list li .check {
+  order: 1;
+}
+
+#extension-list li .reload {
+  order: 2;
+}
+
+.extension-icon.no-icon {
+  visibility: hidden;
 }
 
 button {
