@@ -2,6 +2,7 @@
 
 const searchInput = document.getElementById('search');
 const extensionList = document.getElementById('extension-list');
+const counter = document.getElementById('counter');
 const marginTop = 36;
 const cacheKey = 'extensionCache';
 const settingsKey = 'settingsCache';
@@ -64,7 +65,9 @@ function moveButtonsTo(listItem) {
   const row = rowsById.get(listItem.dataset.id);
   const state = row?.enabled ? 'enabled' : 'disabled';
   toggle.img.className = state;
-  toggle.button.title = state === 'enabled' ? 'Disable' : 'Enable';
+  toggle.button.title = state === 'enabled'
+    ? 'Disable'
+    : 'Enable';
   actions.append(buttons);
 }
 
@@ -91,7 +94,9 @@ function iconUrl(extension) {
   if (!extension.icons?.length)
     return '';
   return extension.icons.reduce((best, icon) =>
-    Math.abs(icon.size - 16) < Math.abs(best.size - 16) ? icon : best).url;
+    Math.abs(icon.size - 16) < Math.abs(best.size - 16)
+      ? icon
+      : best).url;
 }
 
 // Only the fields the popup actually renders, so the cached copy stays small
@@ -110,7 +115,9 @@ function sortRows(list) {
   return list.sort((a, b) => {
     if (a.enabled === b.enabled)
       return a.name.localeCompare(b.name);
-    return a.enabled ? -1 : 1;
+    return a.enabled
+      ? -1
+      : 1;
   });
 }
 
@@ -144,6 +151,7 @@ function render() {
   });
 
   extensionList.replaceChildren(fragment);
+  counter.textContent = `${rows.filter(row => row.enabled).length}/${rows.length}`;
   applyFilter();
   updateActiveItem(extensionList.children);
 }
@@ -166,7 +174,9 @@ function applyFilter() {
 function readCache() {
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey));
-    return Array.isArray(cached) ? cached : [];
+    return Array.isArray(cached)
+      ? cached
+      : [];
   } catch {
     return [];
   }
@@ -186,7 +196,9 @@ function writeCache(list) {
 function readSettingsCache() {
   try {
     const cached = JSON.parse(localStorage.getItem(settingsKey));
-    return cached && typeof cached === 'object' ? cached : {};
+    return cached && typeof cached === 'object'
+      ? cached
+      : {};
   } catch {
     return {};
   }
@@ -310,7 +322,9 @@ function updateActiveItem(items) {
     moveButtonsTo(active);
     active.scrollIntoView({ block: 'nearest' });
     const top = active.getBoundingClientRect().top;
-    const offset = top < marginTop ? top - marginTop : 0;
+    const offset = top < marginTop
+      ? top - marginTop
+      : 0;
     window.scrollBy(0, offset);
   }
 }
@@ -400,7 +414,9 @@ document.addEventListener('keydown', (event) => {
   } else if (event.code === 'KeyH' && event.altKey) {
     // Unselect last selected
     event.preventDefault();
-    const lastSelected = [...extensionList.querySelectorAll('.selected')].at(-1);
+    const lastSelected = [
+      ...extensionList.querySelectorAll('.selected'),
+    ].at(-1);
     if (lastSelected) {
       lastSelected.classList.remove('selected');
       selectedIds = selectedIds.filter(id => id !== lastSelected.dataset.id);
@@ -434,7 +450,9 @@ document.addEventListener('keydown', (event) => {
   } else if (event.ctrlKey && ['KeyE', 'KeyD', 'KeyR'].includes(event.code)) {
     // Enable, Disable, Reload
     event.preventDefault();
-    let selected = [...extensionList.querySelectorAll('.selected')];
+    let selected = [
+      ...extensionList.querySelectorAll('.selected'),
+    ];
     if (selected.length === 0 && activeItem)
       selected = [activeItem];
     if (selected.length === 0)
