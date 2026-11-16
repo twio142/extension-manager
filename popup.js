@@ -6,6 +6,7 @@ const counter = document.getElementById('counter');
 const marginTop = 36;
 const cacheKey = 'extensionCache';
 const settingsKey = 'settingsCache';
+const vivaldiId = 'mpognobbkildjkofajifpdfhcoklimli';
 
 let currentIndex = 0;
 let searchQuery = '';
@@ -281,9 +282,30 @@ function openExtensionOptions(id) {
     chrome.tabs.create({ url: row.optionsUrl });
 }
 
-function openExternal(id) {
+// In Vivaldi with the open-extension-popup UI mod, the popup is opened by
+// Vivaldi itself. Anywhere else (other browsers, mod missing, extension
+// without a toolbar action) the message fails and the external URL is used.
+async function activateExtension(id) {
   const row = rowsById.get(id);
-  if (!row?.enabled || !externalUrl)
+  if (!row?.enabled)
+    return;
+  try {
+    const { id: windowId } = await chrome.windows.getCurrent();
+    const reply = await chrome.runtime.sendMessage(vivaldiId, {
+      action: 'openPopup',
+      extensionId: id,
+      windowId,
+    });
+    if (reply?.ok)
+      return;
+  } catch {
+    // not Vivaldi
+  }
+  openExternal(row);
+}
+
+function openExternal(row) {
+  if (!externalUrl)
     return;
   const url = externalUrl.replace('%s', encodeURIComponent(row.name));
   chrome.runtime.sendNativeMessage(
@@ -341,7 +363,7 @@ function toggleSelection(listItem) {
 extensionList.addEventListener('click', (event) => {
   const link = event.target.closest('a.extension-name');
   if (link)
-    openExternal(link.parentElement.dataset.id);
+    activateExtension(link.parentElement.dataset.id);
 });
 
 extensionList.addEventListener('mouseover', (event) => {
@@ -426,11 +448,11 @@ document.addEventListener('keydown', (event) => {
     searchInput.focus();
     vimMode = false;
   } else if (event.key === 'Enter') {
-    // Activate using external URL
+    // Activate: Vivaldi's popup, or the external URL
     event.preventDefault();
     event.stopPropagation();
     if (activeItem)
-      openExternal(activeItem.dataset.id);
+      activateExtension(activeItem.dataset.id);
   } else if (
     activeItem?.matches('.enabled.has-options')
     && event.code === 'KeyO'

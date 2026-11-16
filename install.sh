@@ -28,7 +28,7 @@ if [ ! -f "$SOURCE_BINARY" ]; then
 fi
 
 DEST_BINARY="$DIR/native-host/app"
-ln -s "$SOURCE_BINARY" "$DEST_BINARY"
+ln -sf "$SOURCE_BINARY" "$DEST_BINARY"
 chmod +x "$DEST_BINARY"
 # --- End of selection ---
 

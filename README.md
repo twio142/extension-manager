@@ -19,7 +19,7 @@ A Chrome extension that manages all installed extensions.
 ## Features
 
 - [x] Hotkeys for each action
-    - `Enter`: activate the extension (using an external URL of your choice)
+    - `Enter`: activate the extension (in Vivaldi with the UI mod below, otherwise using an external URL of your choice)
     - `ctrl-e`: enable the extension
     - `ctrl-d`: disable the extension
     - `ctrl-r`: reload the extension
@@ -42,3 +42,12 @@ You can set an external URL to activate an extension, as if you clicked on its i
 The URL should contain `%s` as a placeholder for the extension's name.
 
 Feel free to utilize any external tool that works for you.
+
+### Vivaldi (optional)
+
+With the UI mod [`vivaldi/open-extension-popup.js`](vivaldi/open-extension-popup.js), activating an extension opens its popup directly, no external URL needed. Without the mod, the external URL is used.
+
+> [!WARNING]
+> Vivaldi does not support JS mods, and an update can break this one (tested with Vivaldi 8.3). It has full control over the browser, so read it before installing.
+
+To install, add the file to Vivaldi's `window.html` with a `<script>` tag, and redo it after each Vivaldi update. See the [Modifications](https://forum.vivaldi.net/category/52/modding-vivaldi) section of the Vivaldi forum for details.
