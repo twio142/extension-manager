@@ -3,6 +3,7 @@
   "name": "Extension Manager",
   "version": "1.0",
   "description": "Manage all installed extensions with ease.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtzgrSyhH5iRMXnVDDd/p7eEIyqYhdiWD1T1Grq1fhAc4NWJV78q5Rbssuwaps/vpc3e/Q8RX+GLSENG/oXxfX+1DYBM0BMdNeOfAFZriGw7zW9mr7DU5Ygiep4fLrji+SWh3XChGVbSO0E889K5/uNii2JcuBR0oT3VZ4NTlm+mPtN+n/lUh9/aS/bpKrGk87nANETShSu/VZafCMM5jkrQBKnQx5DiQjEKU5PqziwWCENPGbdFZShBgUrSLLRELbXwu/exMb1vJph7B+o1gGizryKE9Rxpxhd91nM+ebRxKRiEKNI24obTXUnZE2QIF8SxBtywwXyohimkQAz+61wIDAQAB",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

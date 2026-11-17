@@ -32,9 +32,8 @@ ln -sf "$SOURCE_BINARY" "$DEST_BINARY"
 chmod +x "$DEST_BINARY"
 # --- End of selection ---
 
-# Prompt for the extension ID
-echo "Please go to your browser's extensions page (e.g., chrome://extensions) to find your extension's ID."
-read -p "Paste the extension ID here: " EXTENSION_ID
+# Fixed by the "key" in manifest.json
+EXTENSION_ID="ndfbfllbnlekonnohkmhnadppippplbj"
 
 # Ensure the target directory exists
 mkdir -p "$TARGET_DIR"

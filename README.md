@@ -13,7 +13,7 @@ A Chrome extension that manages all installed extensions.
    - Enable "Developer mode", click "Load unpacked", and select the unpacked directory.
 3. **Run installer:**
    - In your terminal, `cd` into the unpacked directory.
-   - Run `./install.sh` and paste the Extension ID from the extensions page when prompted.
+   - Run `./install.sh`.
 4. **Restart** your browser.
 
 ## Features
