@@ -1,4 +1,4 @@
-// Lets other extensions open any extension's toolbar popup, as if its toolbar button were clicked.
+// Lets Extension Manager (ALLOWED_SENDERS) open any extension's toolbar popup, as if its toolbar button were clicked.
 // Extensions without a popup get their click action instead (action.onClicked), as with a real click.
 // Request, sent to Vivaldi's UI with chrome.runtime.sendMessage("mpognobbkildjkofajifpdfhcoklimli", ...):
 //   {action: "openPopup", extensionId, windowId}. Answers {ok: true} or {error}.
@@ -6,6 +6,7 @@
 // Uses the extensions toolbar's own handler for chrome.action.openPopup (extensionSubscriber), found through
 // React fibers (written against Vivaldi 8.3). If a Vivaldi update renames it, requests answer {error}.
 (() => {
+  const ALLOWED_SENDERS = ["ndfbfllbnlekonnohkmhnadppippplbj"]; // Extension Manager, id fixed by its manifest key
   const DEBUG = false; // true logs each request to the UI console (vivaldi://inspect/#apps, inspect window.html)
   const log = (...a) => { if (DEBUG) console.log("open-extension-popup:", ...a); };
 
@@ -30,8 +31,8 @@
     return null;
   }
 
-  chrome.runtime.onMessageExternal.addListener((msg, _sender, respond) => {
-    if (msg?.action !== "openPopup") return false;
+  chrome.runtime.onMessageExternal.addListener((msg, sender, respond) => {
+    if (msg?.action !== "openPopup" || !ALLOWED_SENDERS.includes(sender.id)) return false;
     if (myWindowId === null || msg.windowId !== myWindowId) return false; // another window's request
     log("request:", msg);
     const id = msg.extensionId;
